@@ -1,3 +1,4 @@
+#version 430
 
 layout(location = 2) uniform vec3 lineColor;
 

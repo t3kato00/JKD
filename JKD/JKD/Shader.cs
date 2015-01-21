@@ -13,7 +13,8 @@ namespace JKD
 		int name;
 		public Shader( ShaderType st, string res )
 		{
-			using (StreamReader r = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream(res), new ASCIIEncoding()))
+            using (Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream(res))
+            using (StreamReader r = new StreamReader(s, new ASCIIEncoding()))
 			{
 				name = GL.CreateShader( st );
 				string prog = r.ReadToEnd();

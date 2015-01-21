@@ -3,7 +3,7 @@ using System;
 
 namespace JKD
 {
-	struct Binding : IDisposable
+	class Binding : IDisposable
 	{
 		IBindable bind;
 

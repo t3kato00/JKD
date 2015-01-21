@@ -6,16 +6,18 @@ using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
+using System.Reflection;
 
 namespace JKD
 {
 	class JKDWindow : GameWindow
 	{
-		double zoom;
+        Program flatColorLineProgram;
+		Vector2d zoom;
 		Vector2d viewPosition;
 		double width;
 		double height;
-		List<Lined> lines = new List<Lined>();
+        List<Lined> lines;
 
 		public JKDWindow() : base( 800, 600, new GraphicsMode( new ColorFormat(8,8,8,0) ), "Jäykän kappaleen dynamiikka" )
 		{
@@ -26,21 +28,28 @@ namespace JKD
 			Load += (sender, e) => {
 				VSync = VSyncMode.On;
 			};
-			Resize += (sender, e) => { Config (-viewPosition.Y, -viewPosition.X, -viewPosition.X+width/zoom); };
+			Resize += (sender, e) => { Config (); };
 			UpdateFrame += (sender, e) => { Update(); };
 			RenderFrame += (sender, e) => { Render(); };
 			Closed += (sender, e) => { Exit(); };
+
+            using (Shader vertex = new Shader(ShaderType.VertexShader, "JKD.Resources.Vertex.frag"))
+            using (Shader flatColorLine = new Shader(ShaderType.FragmentShader, "JKD.Resources.FlatColorLine.frag"))
+            {
+                flatColorLineProgram = new Program(new Shader[] {vertex, flatColorLine});
+            }
+
 		}
 
-		public void Config( double y0, double x0, double x1 )
-		{
+		public void Config(  )
+		{            
 			GL.Viewport (0, 0, Width, Height);
-			viewPosition = new Vector2d( -x0, -y0 );
-			zoom = Width / (x1 - x0);
+			viewPosition = new Vector2d(0.0,0.0);
+			zoom = new Vector2d(0.1,0.1);
 
-			width = Width;
-			height = Height;
-		}
+		    lines = new List<Lined> {new Lined(new Vector2d(0.0, 0.0), new Vector2d(9.0, 1.0)) };
+            GL.DrawBuffers(1, new DrawBuffersEnum[] { DrawBuffersEnum.FrontLeft });
+        }
 
 		public void Update()
 		{
@@ -58,18 +67,25 @@ namespace JKD
 
 			using (VertexArray vertexArray = new VertexArray())
 			using (Binding vbind = new Binding(vertexArray))
-			using (ArrayBuffer<Line> flatColorLinesBuffer = new ArrayBuffer<Line>(flatColorLines))
 			{
+                using (ArrayBuffer<Line> flatColorLinesBuffer = new ArrayBuffer<Line>(flatColorLines))
 				using (Binding bbind = new Binding(flatColorLinesBuffer))
 				{
 					// Create and bind vertex array todo.
 					GL.EnableVertexAttribArray(0);
 					GL.VertexAttribPointer(0, 2, VertexAttribPointerType.Float, false, 0, 0);
 				}
-
-				GL.DrawArrays( BeginMode.Lines, 0, flatColorLines.Length );
+                using (Binding pbind = new Binding(flatColorLineProgram))
+                {
+                    flatColorLineProgram.Uniform(0, (Vector2) zoom);
+                    flatColorLineProgram.Uniform(1, (Vector2) viewPosition);
+                    flatColorLineProgram.Uniform(2, new Vector3(1.0f, 1.0f, 1.0f));
+                    GL.DrawArrays(BeginMode.Lines, 0, flatColorLines.Length);    
+                }
 			}
 
+            if (GL.GetError() != 0)
+                throw new GraphicsContextException("Graphics error");
 			SwapBuffers();
 		}
 	}

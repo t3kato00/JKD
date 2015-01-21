@@ -12,7 +12,7 @@ namespace JKD
 			using (var game = new JKDWindow())
 			{
 				game.Initialize();
-				game.Config( 0.0, -10.0, 10.0);
+				game.Config();
 				game.Run(60.0);
 			}
 		}

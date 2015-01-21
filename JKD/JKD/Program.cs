@@ -8,7 +8,7 @@ using OpenTK.Graphics.OpenGL;
 
 namespace JKD
 {
-    class Program : IDisposable
+    class Program : IDisposable, IBindable
     {
         int name;
 		public Program( IEnumerable<Shader> shaders)
@@ -50,5 +50,34 @@ namespace JKD
 		{
 			return s.name;
 		}
+
+        public void Bind()
+        {
+            GL.UseProgram(name);
+        }
+        public void UnBind()
+        {
+            GL.UseProgram(0);
+        }
+
+        public void Uniform(int uniform, float value)
+        {
+            GL.Uniform1(uniform, value);
+        }
+        
+        public void Uniform(int uniform, Vector2 value)
+        {
+            GL.Uniform2(uniform, value);
+        }
+
+        public void Uniform(int uniform, Vector3 value)
+        {
+            GL.Uniform3(uniform, value);
+        }
+
+        public void Uniform(int uniform, Vector4 value)
+        {
+            GL.Uniform4(uniform, value);
+        }
     }
 }
