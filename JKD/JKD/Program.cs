@@ -33,6 +33,7 @@ namespace JKD
             int rlength;
             StringBuilder log = new StringBuilder(length);
             GL.GetProgramInfoLog(name, length, out rlength, log);
+				Console.Write(log.ToString());
             throw new PlatformNotSupportedException(log.ToString());
 
         }

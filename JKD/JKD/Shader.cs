@@ -31,6 +31,8 @@ namespace JKD
 			int rlength;
 			StringBuilder log = new StringBuilder(length);
 			GL.GetShaderInfoLog(name, length, out rlength, log);
+			Console.WriteLine(res);
+			Console.Write(log.ToString());
 			throw new PlatformNotSupportedException(log.ToString());
 		}
 

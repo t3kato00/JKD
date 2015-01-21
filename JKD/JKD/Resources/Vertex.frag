@@ -1,4 +1,6 @@
-#version 430
+#version 130
+#extension GL_ARB_explicit_uniform_location : enable
+#extension GL_ARB_explicit_attrib_location : enable
 
 layout(location = 0) uniform vec2 zoom;
 layout(location = 1) uniform vec2 viewPosition;
