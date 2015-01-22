@@ -2,7 +2,7 @@
 #extension GL_ARB_explicit_uniform_location : enable
 #extension GL_ARB_explicit_attrib_location : enable
 
-layout(location = 2) uniform vec3 lineColor;
+layout(location = 4) uniform vec3 lineColor;
 
 layout(location = 0) out vec3 color;
 

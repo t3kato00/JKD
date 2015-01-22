@@ -12,9 +12,23 @@ namespace JKD
 			using (var game = new JKDWindow())
 			{
 				game.Initialize();
-				game.Config();
 				game.Run(60.0);
 			}
+		}
+
+		public static void Debug( string caller, params object[] data )
+		{
+			string msg = caller + ":";
+			foreach( object d in data )
+			{
+				msg += " ";
+				if( d is string )
+					msg += d;
+				else
+					msg += d.ToString();
+			}
+
+			Console.WriteLine(msg);
 		}
 	}
 }

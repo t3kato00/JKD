@@ -7,8 +7,8 @@ namespace JKD
 	[StructLayout(LayoutKind.Sequential)]
 	struct Lined
 	{
-		Vector2d a;
-		Vector2d b;
+		public Vector2d a;
+		public Vector2d b;
 
 		public Lined( Vector2d a, Vector2d b )
 		{
@@ -25,8 +25,8 @@ namespace JKD
 	[StructLayout(LayoutKind.Sequential)]
 	struct Line
 	{
-		Vector2 a;
-		Vector2 b;
+		public Vector2 a;
+		public Vector2 b;
 
 		public Line( Vector2 a, Vector2 b )
 		{

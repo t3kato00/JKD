@@ -3,7 +3,7 @@
 #extension GL_ARB_explicit_attrib_location : enable
 
 layout(location = 0) uniform vec2 zoom;
-layout(location = 1) uniform vec2 viewPosition;
+layout(location = 2) uniform vec2 viewPosition;
 
 layout(location = 0) in vec2 position;
 

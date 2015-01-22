@@ -17,6 +17,7 @@ namespace JKD
             using (StreamReader r = new StreamReader(s, new ASCIIEncoding()))
 			{
 				name = GL.CreateShader( st );
+				JKD.Debug("glCreateShader", name);
 				string prog = r.ReadToEnd();
 				GL.ShaderSource(name, 1, new string[] { prog }, new int[] { prog.Length });
 				GL.CompileShader(name);
@@ -31,8 +32,7 @@ namespace JKD
 			int rlength;
 			StringBuilder log = new StringBuilder(length);
 			GL.GetShaderInfoLog(name, length, out rlength, log);
-			Console.WriteLine(res);
-			Console.Write(log.ToString());
+			JKD.Debug("Shader compiling failed for", res, "with" , log);
 			throw new PlatformNotSupportedException(log.ToString());
 		}
 
@@ -40,6 +40,7 @@ namespace JKD
 		{
 			if( name != 0 )
 			{
+				JKD.Debug("glDeleteShader", name);
 				GL.DeleteShader( name );
 				name = 0;
 			}
