@@ -22,15 +22,8 @@ namespace JKD
 			name = GL.GenBuffer();
 			JKD.Debug("glGenBuffer", name);
 			Bind();
-			try
-			{
-				JKD.Debug( "glBufferData ArrayBuffer", data.Length * Marshal.SizeOf(tt), "(" + data.Length.ToString() + ")");
-				GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr) (data.Length * Marshal.SizeOf(tt)), data, BufferUsageHint.StaticDraw);
-			}
-			finally
-			{
-			  	UnBind();
-			}
+			JKD.Debug( "glBufferData ArrayBuffer", data.Length * Marshal.SizeOf(tt), "(" + data.Length.ToString() + ")");
+			GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr) (data.Length * Marshal.SizeOf(tt)), data, BufferUsageHint.StaticDraw);
 		}
 
 		public void Dispose()
