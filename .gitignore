@@ -1,4 +1,5 @@
-
+*.swp
+*.swo
 JKD/JKD.userprefs
 JKD/JKD/bin
 JKD/JKD/obj
