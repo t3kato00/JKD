@@ -50,9 +50,13 @@ namespace JKD
 			GL.Viewport (0, 0, Width, Height);
 			JKD.CheckGLError();
 			viewPosition = new Vector2d(0.0,0.0);
-			zoom = new Vector2d(0.1,0.1);
+			zoom = new Vector2d(1.0,1.0);
 
-			lines = new List<Lined> {new Lined(new Vector2d(0.0, 0.0), new Vector2d(9.0, 1.0)) };
+			lines = new List<Lined>
+				{ new Lined(new Vector2d(-1.0, -1.0), new Vector2d(1.0, -1.0))
+				, new Lined(new Vector2d(1.0, -1.0), new Vector2d(0.0, 1.0))
+				, new Lined(new Vector2d(0.0, 1.0), new Vector2d(-1.0, -1.0))
+				};
 			GL.DrawBuffers(1, new DrawBuffersEnum[] { DrawBuffersEnum.FrontLeft });
 			JKD.CheckGLError();
 		}
@@ -89,7 +93,7 @@ namespace JKD
 					flatColorLineProgram.Bind();
 					flatColorLineProgram.Zoom = (Vector2) zoom;
 					flatColorLineProgram.ViewPosition = (Vector2) viewPosition;
-					flatColorLineProgram.LineColor = new Vector3(255.0f, 255.0f, 255.0f);
+					flatColorLineProgram.LineColor = new Vector4(255.0f, 255.0f, 255.0f, 1.0f);
 					JKD.Debug( "glDrawArrays Lines", flatColorLinePoints.Length );
 					GL.DrawArrays(PrimitiveType.Lines, 0, flatColorLinePoints.Length);
 					JKD.CheckGLError();

@@ -31,7 +31,7 @@ namespace JKD
 		}
 
 		int lineColorLocation;
-		public Vector3 LineColor {
+		public Vector4 LineColor {
 			set { Uniform(lineColorLocation, value); }
 		}
 	}

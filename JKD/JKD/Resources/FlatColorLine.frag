@@ -1,10 +1,10 @@
-#version 130
+#version 330
 #extension GL_ARB_explicit_uniform_location : enable
 #extension GL_ARB_explicit_attrib_location : enable
 
-uniform vec3 lineColor;
+uniform vec4 lineColor;
 
-layout(location = 0) out vec3 color;
+layout(location = 0) out vec4 color;
 
 void main()
 {
