@@ -48,7 +48,10 @@ namespace JKD
 			if( name != 0 )
 			{
 				foreach (Shader shader in shaders)
+				{
 					GL.DetachShader(name, shader);
+					ShaderManager.Release(shader);
+				}
 				JKD.CheckGLError();
 
 				UnBind();
