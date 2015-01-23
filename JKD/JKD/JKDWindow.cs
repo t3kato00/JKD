@@ -10,7 +10,7 @@ using System.Reflection;
 
 namespace JKD
 {
-	class JKDWindow : GameWindow
+	class JKDWindow : GameWindow, IDisposable
 	{
 		FlatColorLineProgram flatColorLineProgram;
 		Vector2d zoom;
@@ -89,13 +89,18 @@ namespace JKD
 					flatColorLineProgram.Bind();
 					flatColorLineProgram.Zoom = (Vector2) zoom;
 					flatColorLineProgram.ViewPosition = (Vector2) viewPosition;
-					flatColorLineProgram.LineColor = new Vector3(1.0f, 1.0f, 1.0f);
+					flatColorLineProgram.LineColor = new Vector3(255.0f, 255.0f, 255.0f);
 					JKD.Debug( "glDrawArrays Lines", flatColorLinePoints.Length );
 					GL.DrawArrays(PrimitiveType.Lines, 0, flatColorLinePoints.Length);
 					JKD.CheckGLError();
 				}
 			}
 			SwapBuffers();
+		}
+
+		public void Dispose()
+		{
+			flatColorLineProgram.Dispose();
 		}
 	}
 }

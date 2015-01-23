@@ -14,7 +14,12 @@ namespace JKD
 			using (var game = new JKDWindow())
 			{
 				game.Initialize();
-				game.Run(60.0);
+				try {
+					game.Run(60.0);
+				}
+				finally {
+					game.Dispose();
+				}
 			}
 		}
 
