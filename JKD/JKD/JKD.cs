@@ -1,6 +1,8 @@
 
 using System;
 using OpenTK;
+using OpenTK.Graphics;
+using OpenTK.Graphics.OpenGL;
 
 namespace JKD
 {
@@ -30,5 +32,46 @@ namespace JKD
 
 			Console.WriteLine(msg);
 		}
+
+        public static void CheckGLError()
+        {
+			  bool hasError = false;
+			  string result = "Graphics context: ";
+			  ErrorCode err;
+			  while ((err = GL.GetError()) != ErrorCode.NoError)
+			  {
+				  hasError = true;
+				  switch (err)
+				  { 
+						case ErrorCode.InvalidEnum:
+							result += "Invalid Enum\n";
+							break;
+						case ErrorCode.InvalidFramebufferOperation:
+							result += "Invalid Framebufferopetarion\n";
+							break;
+					   case ErrorCode.InvalidOperation:
+							result += "Invalidoperataion\n";
+							break;
+						case ErrorCode.InvalidValue:
+							result += "Invalidvalue\n";
+							break;
+						case ErrorCode.OutOfMemory:
+							result += "Outofmemory\n";
+							break;
+						case ErrorCode.StackOverflow:
+							result += "StackOverFLow\n";
+							break;
+						case ErrorCode.StackUnderflow:
+							result += "Stackunderflow\n";
+							break;
+						case ErrorCode.TableTooLarge:
+							result += "TableTooLarge\n";
+							break;
+
+				  }
+				  if(hasError)
+						throw new GraphicsContextException(result);
+			  }
+        }
 	}
 }

@@ -13,6 +13,7 @@ namespace JKD
 		public ArrayBuffer()
 		{
 			name = GL.GenBuffer();
+			JKD.CheckGLError();
 			JKD.Debug("glGenBuffer", name);
 		}
 
@@ -24,6 +25,7 @@ namespace JKD
 			Bind();
 			JKD.Debug( "glBufferData ArrayBuffer", data.Length * Marshal.SizeOf(tt), "(" + data.Length.ToString() + ")");
 			GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr) (data.Length * Marshal.SizeOf(tt)), data, BufferUsageHint.StaticDraw);
+			JKD.CheckGLError();
 		}
 
 		public void Dispose()
@@ -33,6 +35,7 @@ namespace JKD
 				UnBind();
 				JKD.Debug("glDeleteBuffer", name);
 				GL.DeleteBuffer(name);
+				JKD.CheckGLError();
 				name = 0;
 			}
 		}
@@ -43,6 +46,7 @@ namespace JKD
 			{
 				JKD.Debug("glBindBuffer ArrayBuffer", name);
 				GL.BindBuffer(BufferTarget.ArrayBuffer, name);
+				JKD.CheckGLError();
 				bound = name;
 			}
 		}
@@ -53,6 +57,7 @@ namespace JKD
 			{
 				JKD.Debug("glBindBuffer ArrayBuffer", 0);
 				GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
+                JKD.CheckGLError();
 				bound = 0;
 			}
 		}

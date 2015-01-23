@@ -8,34 +8,37 @@ using OpenTK.Graphics.OpenGL;
 
 namespace JKD
 {
+
 	class Program : IDisposable, IBindable
 	{
 		int name;
 		static private int bound = 0;
+		IEnumerable<Shader> shaders;
 
 		public Program( IEnumerable<Shader> shaders)
 		{
 			name = GL.CreateProgram();
+			JKD.CheckGLError();
 			JKD.Debug("glCreateProgram", name);
-
+			this.shaders = shaders;
 			foreach (Shader shader in shaders)
 				GL.AttachShader(name, shader);
-
+			JKD.CheckGLError();
 			GL.LinkProgram(name);
-
-			foreach (Shader shader in shaders)
-				GL.DetachShader(name, shader);
-
+			JKD.CheckGLError();
 			int status;
 			GL.GetProgram(name, GetProgramParameterName.LinkStatus, out status);
+			JKD.CheckGLError();
 			if (status != 0)
 				return;
 
 			int length;
 			GL.GetProgram(name, GetProgramParameterName.InfoLogLength, out length);
+			JKD.CheckGLError();
 			int rlength;
 			StringBuilder log = new StringBuilder(length);
 			GL.GetProgramInfoLog(name, length, out rlength, log);
+			JKD.CheckGLError();
 			JKD.Debug("Program linking failed with", log.ToString());
 			throw new PlatformNotSupportedException(log.ToString());
 		}
@@ -44,9 +47,14 @@ namespace JKD
 		{
 			if( name != 0 )
 			{
+				foreach (Shader shader in shaders)
+					GL.DetachShader(name, shader);
+				JKD.CheckGLError();
+
 				UnBind();
 				JKD.Debug("glDeleteProgram", name);
 				GL.DeleteProgram( name );
+				JKD.CheckGLError();
 				name = 0;
 			}
 		}
@@ -57,6 +65,7 @@ namespace JKD
 			{
 				JKD.Debug("glUseProgam", name);
 				GL.UseProgram(name);
+				JKD.CheckGLError();
 				bound = name;
 			}
 		}
@@ -66,6 +75,7 @@ namespace JKD
 			{
 				JKD.Debug("glUseProgam", 0);
 				GL.UseProgram(0);
+				JKD.CheckGLError();
 				bound = 0;
 			}
 		}
@@ -76,24 +86,36 @@ namespace JKD
 		}
 
 
-		public void Uniform(int uniform, float value)
+		protected void Uniform(int uniform, float value)
 		{
-			GL.Uniform1(uniform, value);
+			GL.ProgramUniform1(name, uniform, value);
+			JKD.CheckGLError();
 		}
 
-		public void Uniform(int uniform, Vector2 value)
+		protected void Uniform(int uniform, Vector2 value)
 		{
-			GL.Uniform2(uniform, value);
+			GL.ProgramUniform2(name, uniform, value.X, value.Y);
+			JKD.CheckGLError();
 		}
 
-		public void Uniform(int uniform, Vector3 value)
+		protected void Uniform(int uniform, Vector3 value)
 		{
-			GL.Uniform3(uniform, value);
+			GL.ProgramUniform3(name, uniform, value.X, value.Y, value.Z);
+			JKD.CheckGLError();
 		}
 
-		public void Uniform(int uniform, Vector4 value)
+		protected void Uniform(int uniform, Vector4 value)
 		{
-			GL.Uniform4(uniform, value);
+			GL.ProgramUniform4(name, uniform, value.X, value.Y, value.Z, value.W);
+			JKD.CheckGLError();
 		}
+
+		protected int LoadUniformLocation(string symbol)
+		{
+			int result = GL.GetUniformLocation(name, symbol);
+			JKD.CheckGLError();
+			return result;
+		}
+
 	}
 }

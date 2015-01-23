@@ -13,6 +13,7 @@ namespace JKD
 		public VertexArray()
 		{
 			name = GL.GenVertexArray();
+			JKD.CheckGLError();
 			JKD.Debug("glGenVertexArray", name);
 		}
 
@@ -23,6 +24,7 @@ namespace JKD
 				UnBind();
 				JKD.Debug("glDeleteVertexArray", name);
 				GL.DeleteVertexArray(name);
+				JKD.CheckGLError();
 				name = 0;
 			}
 		}
@@ -33,6 +35,7 @@ namespace JKD
 			{
 				JKD.Debug("glBindVertexArray", name);
 				GL.BindVertexArray(name);
+				JKD.CheckGLError();
 				bound = name;
 			}
 		}
@@ -43,6 +46,7 @@ namespace JKD
 			{
 				JKD.Debug("glBindVertexArray", 0);
 				GL.BindVertexArray(0);
+				JKD.CheckGLError();
 				bound = 0;
 			}
 		}

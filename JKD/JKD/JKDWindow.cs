@@ -12,7 +12,7 @@ namespace JKD
 {
 	class JKDWindow : GameWindow
 	{
-		Program flatColorLineProgram;
+		FlatColorLineProgram flatColorLineProgram;
 		Vector2d zoom;
 		Vector2d viewPosition;
 		List<Lined> lines;
@@ -41,23 +41,20 @@ namespace JKD
 			Closed += (sender, e) => { Exit(); };
 
 			//GL.LoadAll();
-			using (Shader vertex = new Shader(ShaderType.VertexShader, "JKD.Resources.Vertex.frag"))
-			using (Shader flatColorLine = new Shader(ShaderType.FragmentShader, "JKD.Resources.FlatColorLine.frag"))
-			{
-				flatColorLineProgram = new Program(new Shader[] {vertex, flatColorLine});
-			}
-
+			flatColorLineProgram = new FlatColorLineProgram();
 			Config();
 		}
 
 		public void Config(  )
 		{            
 			GL.Viewport (0, 0, Width, Height);
+			JKD.CheckGLError();
 			viewPosition = new Vector2d(0.0,0.0);
 			zoom = new Vector2d(0.1,0.1);
 
 			lines = new List<Lined> {new Lined(new Vector2d(0.0, 0.0), new Vector2d(9.0, 1.0)) };
 			GL.DrawBuffers(1, new DrawBuffersEnum[] { DrawBuffersEnum.FrontLeft });
+			JKD.CheckGLError();
 		}
 
 		public void Update()
@@ -69,6 +66,7 @@ namespace JKD
 		public void Render()
 		{
 			GL.Clear(ClearBufferMask.ColorBufferBit);
+			JKD.CheckGLError();
 
 			Vector2[] flatColorLinePoints = new Vector2[2*lines.Count];
 			for( int index = 0; index < lines.Count; index += 1 )
@@ -84,19 +82,19 @@ namespace JKD
 				{
 					flatColorLinesBuffer.Bind();
 					GL.EnableVertexAttribArray(0);
+					JKD.CheckGLError();
 					GL.VertexAttribPointer(0, 2, VertexAttribPointerType.Float, false, 8, 0);
+					JKD.CheckGLError();
 
 					flatColorLineProgram.Bind();
-					flatColorLineProgram.Uniform(0, (Vector2) zoom);
-					flatColorLineProgram.Uniform(2, (Vector2) viewPosition);
-					flatColorLineProgram.Uniform(4, new Vector3(1.0f, 1.0f, 1.0f));
+					flatColorLineProgram.Zoom = (Vector2) zoom;
+					flatColorLineProgram.ViewPosition = (Vector2) viewPosition;
+					flatColorLineProgram.LineColor = new Vector3(1.0f, 1.0f, 1.0f);
 					JKD.Debug( "glDrawArrays Lines", flatColorLinePoints.Length );
-					GL.DrawArrays(PrimitiveType.Lines, 0, flatColorLinePoints.Length);    
+					GL.DrawArrays(PrimitiveType.Lines, 0, flatColorLinePoints.Length);
+					JKD.CheckGLError();
 				}
 			}
-
-			if (GL.GetError() != 0)
-				throw new GraphicsContextException("Graphics error");
 			SwapBuffers();
 		}
 	}
