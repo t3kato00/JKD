@@ -57,7 +57,7 @@ namespace JKD
 			//GL.LoadAll();
 			flatColorLineProgram = new FlatColorLineProgram();
 
-			zoom = new Vector2d(0.2,0.2/pixelRatio);
+			zoom = new Vector2d(0.2,0.0); // Y is initialized in config.
 			viewPosition = new Vector2d(-5.0,0.0); // Y is initialized in config.
 
 			Config();
@@ -65,7 +65,8 @@ namespace JKD
 
 		public void Config()
 		{            
-			viewPosition.Y = pixelRatio * (2.0/((double)Height)-1.0) / 0.2;
+			zoom.Y = 0.2*((double)Width)/(pixelRatio*(double)Height);
+			viewPosition.Y = (2.0/((double)Height)-1.0) / zoom.Y;
 			GL.Viewport (0, 0, Width, Height);
 			JKD.CheckGLError();
 
