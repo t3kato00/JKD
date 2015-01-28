@@ -12,6 +12,7 @@ namespace JKD
 {
 	class JKDWindow : GameWindow, IDisposable
 	{
+		double pixelRatio = 1.4;
 		FlatColorLineProgram flatColorLineProgram;
 		Vector2d zoom;
 		Vector2d viewPosition;
@@ -56,14 +57,15 @@ namespace JKD
 			//GL.LoadAll();
 			flatColorLineProgram = new FlatColorLineProgram();
 
-			zoom = new Vector2d(0.2,0.2);
-			viewPosition = new Vector2d(-5.0,0.0);
+			zoom = new Vector2d(0.2,0.2/pixelRatio);
+			viewPosition = new Vector2d(-5.0,0.0); // Y is initialized in config.
 
 			Config();
 		}
 
 		public void Config()
 		{            
+			viewPosition.Y = pixelRatio * (2.0/((double)Height)-1.0) / 0.2;
 			GL.Viewport (0, 0, Width, Height);
 			JKD.CheckGLError();
 
