@@ -86,6 +86,7 @@ namespace JKD
 
 		public void Render()
 		{
+			GL.ClearColor(0.0f, 0.0f, 0.0f, 255.0f);
 			GL.Clear(ClearBufferMask.ColorBufferBit);
 			JKD.CheckGLError();
 
