@@ -23,11 +23,12 @@ namespace JKD
 			for (int i = 0; i < count; i++)
 			{
 				string extension = GL.GetString(StringNameIndexed.Extensions, i);
-				if (extension == "ARB_vertex_attrib_binding")
+				JKD.Debug("extension", extension);
+				if (extension == "GL_ARB_vertex_attrib_binding")
 					separateVertexFormat = true;
 			}
 
-			JKD.Debug("arb_vertex_attrib_binding", separateVertexFormat);
+			JKD.Debug("GL_ARB_vertex_attrib_binding", separateVertexFormat);
 		}
 	}
 }
