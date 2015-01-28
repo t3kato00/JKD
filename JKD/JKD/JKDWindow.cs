@@ -15,7 +15,7 @@ namespace JKD
 		FlatColorLineProgram flatColorLineProgram;
 		Vector2d zoom;
 		Vector2d viewPosition;
-		List<Lined> lines;
+		List<Line> lines;
 
 		public JKDWindow()
 		: base
@@ -52,10 +52,10 @@ namespace JKD
 			viewPosition = new Vector2d(0.0,0.0);
 			zoom = new Vector2d(1.0,1.0);
 
-			lines = new List<Lined>
-				{ new Lined(new Vector2d(-1.0, -1.0), new Vector2d(1.0, -1.0))
-				, new Lined(new Vector2d(1.0, -1.0), new Vector2d(0.0, 1.0))
-				, new Lined(new Vector2d(0.0, 1.0), new Vector2d(-1.0, -1.0))
+			lines = new List<Line>
+				{ new Line(new Vector2d(-1.0, -1.0), new Vector2d(1.0, -1.0))
+				, new Line(new Vector2d(1.0, -1.0), new Vector2d(0.0, 1.0))
+				, new Line(new Vector2d(0.0, 1.0), new Vector2d(-1.0, -1.0))
 				};
 			GL.DrawBuffers(1, new DrawBuffersEnum[] { DrawBuffersEnum.FrontLeft });
 			JKD.CheckGLError();
@@ -75,8 +75,8 @@ namespace JKD
 			Vector2[] flatColorLinePoints = new Vector2[2*lines.Count];
 			for( int index = 0; index < lines.Count; index += 1 )
 			{
-				flatColorLinePoints[2*index] = (Vector2) lines[index].a;
-				flatColorLinePoints[2*index+1] = (Vector2) lines[index].b;
+				flatColorLinePoints[2*index] = (Vector2) lines[index].A;
+				flatColorLinePoints[2*index+1] = (Vector2) lines[index].B;
 			}
 
 			using (VertexArray vertexArray = new VertexArray())
