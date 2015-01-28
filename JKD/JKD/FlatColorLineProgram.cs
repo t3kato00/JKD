@@ -23,14 +23,16 @@ namespace JKD
 			JKD.Debug("glEnableVertexAttribArray", 0);
 			GL.EnableVertexAttribArray(0);
 			JKD.CheckGLError();
+			if (OpenGLFeatures.separateVertexFormat)
+			{
+				JKD.Debug("glVertexAttribFormat", 0, 2, "Float", "false", 0);
+				GL.VertexAttribFormat(0, 2, VertexAttribType.Float, false, 0);
+				JKD.CheckGLError();
 
-			JKD.Debug("glVertexAttribFormat", 0, 2, "Float", "false", 0);
-			GL.VertexAttribFormat(0, 2, VertexAttribType.Float, false, 0);  
-			JKD.CheckGLError();
-
-			JKD.Debug("glVertexAttribBinding", 0, 0);
-			GL.VertexAttribBinding(0, 0);
-			JKD.CheckGLError();
+				JKD.Debug("glVertexAttribBinding", 0, 0);
+				GL.VertexAttribBinding(0, 0);
+				JKD.CheckGLError();
+			}
 		}
 
 		int viewPositionLocation;
@@ -62,9 +64,16 @@ namespace JKD
 			drawLinesVAO.Bind();
 			using( ArrayBuffer<Vector2> buf = new ArrayBuffer<Vector2>(points) )
 			{
-				JKD.Debug("glBindVertexBuffer", 0, (int) buf, 0, 8);
-				GL.BindVertexBuffer(0, buf, (IntPtr) 0, 8); 
-				JKD.CheckGLError();
+				if (OpenGLFeatures.separateVertexFormat)
+				{
+					JKD.Debug("glBindVertexBuffer", 0, (int)buf, 0, 8);
+					GL.BindVertexBuffer(0, buf, (IntPtr)0, 8);
+					JKD.CheckGLError();
+				}
+				else
+				{
+					GL.VertexAttribPointer(0, 2, VertexAttribPointerType.Float, false, 0, 0);	
+				}
 
 				JKD.Debug("glDrawArrays Lines", 0, points.Length);
 				GL.DrawArrays(PrimitiveType.Lines, 0, points.Length);

@@ -39,6 +39,7 @@
   <ItemGroup>
     <Compile Include="Cannonball.cs" />
     <Compile Include="FlatColorLineProgram.cs" />
+    <Compile Include="OpenGLFeatures.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Line.cs" />

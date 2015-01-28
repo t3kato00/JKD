@@ -57,6 +57,7 @@ namespace JKD
 			//GL.Enable(EnableCap.LineSmooth);
 			//GL.LoadAll();
 			flatColorLineProgram = new FlatColorLineProgram();
+			OpenGLFeatures.Initialise();
 
 			zoom = new Vector2d(2.0/groundLength,0.0); // Y is initialized in config.
 			viewPosition = new Vector2d(-groundLength/2.0,0.0); // Y is initialized in config.
