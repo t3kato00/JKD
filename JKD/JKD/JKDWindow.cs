@@ -13,6 +13,7 @@ namespace JKD
 	class JKDWindow : GameWindow, IDisposable
 	{
 		double pixelRatio = 1.4;
+		double groundLength = 24.0;
 		FlatColorLineProgram flatColorLineProgram;
 		Vector2d zoom;
 		Vector2d viewPosition;
@@ -57,24 +58,32 @@ namespace JKD
 			//GL.LoadAll();
 			flatColorLineProgram = new FlatColorLineProgram();
 
-			zoom = new Vector2d(0.2,0.0); // Y is initialized in config.
-			viewPosition = new Vector2d(-5.0,0.0); // Y is initialized in config.
+			zoom = new Vector2d(2.0/groundLength,0.0); // Y is initialized in config.
+			viewPosition = new Vector2d(-groundLength/2.0,0.0); // Y is initialized in config.
 
 			Config();
 		}
 
 		public void Config()
 		{            
-			zoom.Y = 0.2*((double)Width)/(pixelRatio*(double)Height);
+			zoom.Y = zoom.X*((double)Width)/(pixelRatio*(double)Height);
 			viewPosition.Y = (2.0/((double)Height)-1.0) / zoom.Y;
 			GL.Viewport (0, 0, Width, Height);
 			JKD.CheckGLError();
 
-			lines = new List<Line>
-				{ new Line(new Vector2d(-1.0, -1.0), new Vector2d(1.0, -1.0))
-				, new Line(new Vector2d(1.0, -1.0), new Vector2d(0.0, 1.0))
-				, new Line(new Vector2d(0.0, 1.0), new Vector2d(-1.0, -1.0))
-				};
+			lines = new List<Line>{};
+			Vector2d[] points = new Vector2d[] {
+				new Vector2d(20.0,0.0)
+				, new Vector2d(20.0, 2.0), new Vector2d(21.0, 2.0)
+				, new Vector2d(21.0, 4.0), new Vector2d(21.5, 4.5)
+				, new Vector2d(22.0, 4.0), new Vector2d(22.0, 2.0)
+				, new Vector2d(23.0, 2.0), new Vector2d(23.0, 0.0) };
+			Vector2d p0 = points[points.Length - 1];
+			foreach (Vector2d p1 in points)
+			{
+				lines.Add(new Line(p0, p1));
+				p0 = p1;
+			}
 			GL.DrawBuffers(1, new DrawBuffersEnum[] { DrawBuffersEnum.FrontLeft });
 			JKD.CheckGLError();
 		}
