@@ -55,15 +55,17 @@ namespace JKD
 			//GL.Enable(EnableCap.LineSmooth);
 			//GL.LoadAll();
 			flatColorLineProgram = new FlatColorLineProgram();
+
+			zoom = new Vector2d(0.2,0.2);
+			viewPosition = new Vector2d(-5.0,0.0);
+
 			Config();
 		}
 
-		public void Config(  )
+		public void Config()
 		{            
 			GL.Viewport (0, 0, Width, Height);
 			JKD.CheckGLError();
-			viewPosition = new Vector2d(0.2,0.2);
-			zoom = new Vector2d(0.1,0.1);
 
 			lines = new List<Line>
 				{ new Line(new Vector2d(-1.0, -1.0), new Vector2d(1.0, -1.0))
