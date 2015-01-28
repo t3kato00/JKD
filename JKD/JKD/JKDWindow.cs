@@ -91,35 +91,11 @@ namespace JKD
 			GL.Clear(ClearBufferMask.ColorBufferBit);
 			JKD.CheckGLError();
 
-			Vector2[] flatColorLinePoints = new Vector2[2*lines.Count + 2];
-			for( int index = 0; index < lines.Count; index += 1 )
-			{
-				flatColorLinePoints[2*index] = (Vector2) lines[index].A;
-				flatColorLinePoints[2*index+1] = (Vector2) lines[index].B;
-			}
-            flatColorLinePoints[2 * lines.Count] = new Vector2(0.0f, 0.0f);
-            flatColorLinePoints[2 * lines.Count + 1] = (Vector2) MousePosition;
+			flatColorLineProgram.Zoom = (Vector2) zoom;
+			flatColorLineProgram.ViewPosition = (Vector2) viewPosition;
+			flatColorLineProgram.LineColor = new Vector4(255.0f,255.0f,255.0f,1.0f);
+			flatColorLineProgram.DrawLines(lines);
 
-			using (VertexArray vertexArray = new VertexArray())
-			{
-				vertexArray.Bind();
-				using (ArrayBuffer<Vector2> flatColorLinesBuffer = new ArrayBuffer<Vector2>(flatColorLinePoints))
-				{
-					flatColorLinesBuffer.Bind();
-					GL.EnableVertexAttribArray(0);
-					JKD.CheckGLError();
-					GL.VertexAttribPointer(0, 2, VertexAttribPointerType.Float, false, 8, 0);
-					JKD.CheckGLError();
-
-					flatColorLineProgram.Bind();
-					flatColorLineProgram.Zoom = (Vector2) zoom;
-					flatColorLineProgram.ViewPosition = (Vector2) viewPosition;
-					flatColorLineProgram.LineColor = new Vector4(255.0f, 255.0f, 255.0f, 1.0f);
-					JKD.Debug( "glDrawArrays Lines", flatColorLinePoints.Length );
-					GL.DrawArrays(PrimitiveType.Lines, 0, flatColorLinePoints.Length);
-					JKD.CheckGLError();
-				}
-			}
 			SwapBuffers();
 		}
 

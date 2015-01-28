@@ -57,7 +57,7 @@ namespace JKD
 			{
 				JKD.Debug("glBindBuffer ArrayBuffer", 0);
 				GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
-                JKD.CheckGLError();
+				JKD.CheckGLError();
 				bound = 0;
 			}
 		}
