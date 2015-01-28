@@ -34,8 +34,8 @@ namespace JKD
 		{
 			get
 			{
-				Vector2d coords = new Vector2d((double) Mouse.X, (double) Mouse.Y);
-				coords.DivideBy( new Vector2d((double) Width, (double) Height));
+				Vector2d coords = new Vector2d((double) Mouse.X, (double) Height - Mouse.Y);
+				coords = coords.DivideBy( new Vector2d((double) Width, (double) Height));
 				coords *= 2.0;
 				coords -= new Vector2d( 1.0, 1.0 );
 				return coords.DivideBy(zoom) - viewPosition;
@@ -85,12 +85,14 @@ namespace JKD
 			GL.Clear(ClearBufferMask.ColorBufferBit);
 			JKD.CheckGLError();
 
-			Vector2[] flatColorLinePoints = new Vector2[2*lines.Count];
+			Vector2[] flatColorLinePoints = new Vector2[2*lines.Count + 2];
 			for( int index = 0; index < lines.Count; index += 1 )
 			{
 				flatColorLinePoints[2*index] = (Vector2) lines[index].A;
 				flatColorLinePoints[2*index+1] = (Vector2) lines[index].B;
 			}
+            flatColorLinePoints[2 * lines.Count] = new Vector2(0.0f, 0.0f);
+            flatColorLinePoints[2 * lines.Count + 1] = (Vector2) MousePosition;
 
 			using (VertexArray vertexArray = new VertexArray())
 			{
