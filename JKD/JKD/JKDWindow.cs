@@ -30,6 +30,18 @@ namespace JKD
 		{
 		}
 
+		public Vector2d MousePosition
+		{
+			get
+			{
+				Vector2d coords = new Vector2d((double) Mouse.X, (double) Mouse.Y);
+				coords.DivideBy( new Vector2d((double) Width, (double) Height));
+				coords *= 2.0;
+				coords -= new Vector2d( 1.0, 1.0 );
+				return coords.DivideBy(zoom) - viewPosition;
+			}
+		}
+
 		public void Initialize()
 		{
 			Load += (sender, e) => {
@@ -40,6 +52,7 @@ namespace JKD
 			RenderFrame += (sender, e) => { Render(); };
 			Closed += (sender, e) => { Exit(); };
 
+			//GL.Enable(EnableCap.LineSmooth);
 			//GL.LoadAll();
 			flatColorLineProgram = new FlatColorLineProgram();
 			Config();
@@ -49,8 +62,8 @@ namespace JKD
 		{            
 			GL.Viewport (0, 0, Width, Height);
 			JKD.CheckGLError();
-			viewPosition = new Vector2d(0.0,0.0);
-			zoom = new Vector2d(1.0,1.0);
+			viewPosition = new Vector2d(0.2,0.2);
+			zoom = new Vector2d(0.1,0.1);
 
 			lines = new List<Lined>
 				{ new Lined(new Vector2d(-1.0, -1.0), new Vector2d(1.0, -1.0))

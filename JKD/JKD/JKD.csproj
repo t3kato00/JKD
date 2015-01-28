@@ -49,6 +49,7 @@
     <Compile Include="ShaderManager.cs" />
     <Compile Include="VertexArray.cs" />
     <Compile Include="Shader.cs" />
+    <Compile Include="Extensions.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
