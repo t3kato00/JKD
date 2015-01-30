@@ -51,6 +51,10 @@ namespace JKD
 		}
 
 		private VertexArray drawLinesVAO;
+		public void DrawLine( Line line )
+		{
+			DrawLines( new List<Line> { line } );
+		}
 		public void DrawLines( List<Line> lines )
 		{
 			Vector2[] points = new Vector2[2*lines.Count];

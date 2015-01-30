@@ -73,8 +73,8 @@ namespace JKD
 			JKD.CheckGLError();
 
 			lines = new List<Line>{};
-			Vector2d[] points = new Vector2d[] {
-				new Vector2d(20.0,0.0)
+			Vector2d[] points = new Vector2d[]
+				{ new Vector2d(20.0,0.0)
 				, new Vector2d(20.0, 2.0), new Vector2d(21.0, 2.0)
 				, new Vector2d(21.0, 4.0), new Vector2d(21.5, 4.5)
 				, new Vector2d(22.0, 4.0), new Vector2d(22.0, 2.0)
@@ -105,6 +105,23 @@ namespace JKD
 			flatColorLineProgram.ViewPosition = (Vector2) viewPosition;
 			flatColorLineProgram.LineColor = new Vector4(255.0f,255.0f,255.0f,1.0f);
 			flatColorLineProgram.DrawLines(lines);
+
+			Cannonball ball = new Cannonball( new Vector2d( 0.0, 0.0 ), MousePosition );
+			flatColorLineProgram.LineColor = new Vector4(0.0f,0.0f,255.0f,1.0f);
+			flatColorLineProgram.DrawLine(new Line(ball.StartPosition, ball.StartVelocity));
+			
+			Vector2d pos;
+			int index;
+			Line line;
+			double time;
+			if(ball.Collide( lines, out pos, out index, out line, out time, new Vector2d( 0.0, -9.81 )))
+			{
+				flatColorLineProgram.LineColor = new Vector4(255.0f,0.0f,0.0f,1.0f);
+				flatColorLineProgram.DrawLine(line);
+			}
+			flatColorLineProgram.LineColor = new Vector4(0.0f,255.0f,0.0f,1.0f);
+			flatColorLineProgram.DrawLine(new Line(ball.StartVelocity,pos));
+
 
 			SwapBuffers();
 		}
