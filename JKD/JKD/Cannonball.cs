@@ -23,9 +23,14 @@ namespace JKD
 		Ground = new Vector3d( 1.0, 0.0, 0.0 );
 		}
 
+		private Vector2d PositionAt( double t )
+		{
+			return StartPosition + t*StartVelocity + (0.5*t*t)*Gravity;
+		}
+
 		private bool SolveThrow( double a, double b, double c, out double t )
 		{
-			double A = a * gravity.X       + b * gravity.Y;
+			double A = a * Gravity.X       + b * Gravity.Y;
 			double B = a * StartVelocity.X + b * StartVelocity.Y;
 			double C = a * StartPosition.X + b * StartPosition.Y + c;
 			if( A != 0 )
@@ -72,63 +77,56 @@ namespace JKD
 				}
 
 				t = -C/B;
-				return t >= 0.0;
-			}
-	  }
-
-        public bool Collide(List<Line> lines, out Vector2d position, out int bestIndex, out Line bestLine, out double bestTime, Vector2d gravity)
-        {
-            int index = 0;
-            bestIndex = 0;
-            bestTime = double.PositiveInfinity;
-				bestLine = new Line();
-            foreach (Line line in lines)
-            {
-                double a = line.XCofficient;
-                double b = line.YCofficient;
-                double c = line.Constant;
-
-					 double t;
-					 if( SolveThrow( a, b, c, out t) )
-						 if( t < bestTime )
-						 {
-							  bestTime = t;
-							  bestLine = line;
-							  bestIndex = index;
-						 }
-
-                index += 1;
-            }
-            if(double.IsInfinity(bestTime))
-				{
-                double A = gravity.Y;
-                double B = StartVelocity.Y;
-                double C = StartPosition.Y;
-                double timeBase = -B / A;
-                double discriminate = Math.Sqrt(B * B - 2 * A * C) / A;
-                double tPlus = timeBase + discriminate;
-                double tMinus = timeBase - discriminate;
-
-                if (tMinus >= 0.0 && tMinus < bestTime)
-                {
-                    bestTime = tMinus;
-                    bestIndex = index;
-                }
-                else if (tPlus >= 0.0 && tPlus < bestTime)
-                {
-                    bestTime = tPlus;
-                    bestIndex = index;
-                }
-					 else
-						bestTime = 0.0;
-					position = StartPosition + StartVelocity * bestTime + 0.5 * bestTime * bestTime * gravity;
-					return false;
-				}
+				if(t >= 0.0)
+					return true;
 				else
 				{
-					position = StartPosition + StartVelocity * bestTime + 0.5 * bestTime * bestTime * gravity;
-					return true;
+					t = 0.0;
+					return false;
 				}
-        }
-    }
+			}
+		}
+
+		public bool Collide(List<Line> lines, out Vector2d position, out int bestIndex, out Line bestLine, out double bestTime, Vector2d gravity)
+		{
+			int index = 0;
+			bestIndex = 0;
+			bestTime = double.PositiveInfinity;
+			bestLine = new Line();
+			foreach (Line line in lines)
+			{
+				double a = line.XCofficient;
+				double b = line.YCofficient;
+				double c = line.Constant;
+
+				double t;
+				if( SolveThrow( a, b, c, out t) )
+					if( t < bestTime )
+					{
+						Vector2d pos = PositionAt(t);
+						if(line.BoxCheck(pos))
+						{
+							bestTime = t;
+							bestLine = line;
+							bestIndex = index;
+						}
+					}
+
+				index += 1;
+			}
+			if(double.IsInfinity(bestTime))
+			{
+				double t;
+				SolveThrow( Ground.X, Ground.Y, Ground.Z, out t);
+				position = PositionAt( t );
+				return false;
+			}
+			else
+			{
+				position = PositionAt( bestTime );
+				return true;
+			}
+		}
+	}
 }
+

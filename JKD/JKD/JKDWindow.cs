@@ -85,7 +85,7 @@ namespace JKD
 				lines.Add(new Line(p0, p1));
 				p0 = p1;
 			}
-			GL.DrawBuffers(1, new DrawBuffersEnum[] { DrawBuffersEnum.FrontLeft });
+			GL.DrawBuffers(1, new DrawBuffersEnum[] { DrawBuffersEnum.BackLeft });
 			JKD.CheckGLError();
 		}
 
