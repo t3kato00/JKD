@@ -11,8 +11,8 @@ namespace JKD
 		public Vector2d B { get; set; }
 
 		public double XCofficient { get { return B.Y - A.Y; } }
-		public double YCofficient { get { return B.X - A.X; } }
-		public double Constant { get { return (YCofficient * A.Y - XCofficient * A.X); } }
+		public double YCofficient { get { return A.X - B.X; } }
+		public double Constant { get { return ((A.Y-B.Y)*A.X + (B.X-A.X)*A.Y); } }
 
 		private void MinMax( double a, double b, out double min, out double max )
 		{
@@ -28,12 +28,13 @@ namespace JKD
 			}
 		}
 
+		const double epsilon = 0.00001;
 		public bool BoxCheck( Vector2d pos )
 		{
 			double xMin, xMax, yMin, yMax;
 			MinMax( A.X, B.X, out xMin, out xMax );
 			MinMax( A.Y, B.Y, out yMin, out yMax );
-			return xMin <= pos.X && pos.X <= xMax && yMin <= pos.Y && pos.Y <= yMax;
+			return xMin <= pos.X + epsilon && pos.X <= xMax + epsilon && yMin <= pos.Y + epsilon && pos.Y <= yMax + epsilon;
 		}
 
 		public Line()

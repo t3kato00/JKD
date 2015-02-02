@@ -10,6 +10,7 @@ namespace JKD
 {
 	class Cannonball
 	{
+		const double epsilon = 0.00001;
 		public Vector2d StartPosition { get; set; }
 		public Vector2d StartVelocity { get; set; }
 		public Vector2d Gravity { get; set; }
@@ -17,18 +18,19 @@ namespace JKD
 
 		public Cannonball( Vector2d pos, Vector2d vel )
 		{ 
-		StartPosition = pos;
-		StartVelocity = vel;
-		Gravity = new Vector2d( 0.0, -9.81 );
-		Ground = new Vector3d( 1.0, 0.0, 0.0 );
+			StartPosition = pos;
+			StartVelocity = vel;
+			Gravity = new Vector2d( 0.0, -9.81 );
+			Ground = new Vector3d( 0.0, 1.0, 0.0 );
 		}
 
-		private Vector2d PositionAt( double t )
+		public Vector2d PositionAt( double t )
 		{
 			return StartPosition + t*StartVelocity + (0.5*t*t)*Gravity;
 		}
 
-		private bool SolveThrow( double a, double b, double c, out double t )
+		delegate bool SolveCheck( double t );
+		private bool SolveThrow( double a, double b, double c, out double t, SolveCheck check )
 		{
 			double A = a * Gravity.X       + b * Gravity.Y;
 			double B = a * StartVelocity.X + b * StartVelocity.Y;
@@ -43,8 +45,8 @@ namespace JKD
 					return false;
 				}
 				double tOffset = Math.Sqrt(discriminant) / A;
-				double tMinus = tBase + tOffset;
-				double tPlus = tBase - tOffset;
+				double tMinus = tBase - tOffset;
+				double tPlus = tBase + tOffset;
 				if( tMinus > tPlus )
 				{
 					double temp = tMinus;
@@ -52,12 +54,12 @@ namespace JKD
 					tPlus = temp;
 				}
 
-				if (tMinus >= 0.0)
+				if (tMinus > epsilon && check(tMinus))
 				{
 					t = tMinus;
 					return true;
 				}
-				else if (tPlus >= 0.0)
+				else if (tPlus > epsilon && check(tPlus))
 				{
 					t = tPlus;
 					return true;
@@ -73,11 +75,11 @@ namespace JKD
 				if( B == 0.0 )
 				{
 					t = 0.0;
-					return true;
+					return C == 0.0 && check(t);
 				}
 
 				t = -C/B;
-				if(t >= 0.0)
+				if(t >= 0.0 && check(t))
 					return true;
 				else
 				{
@@ -87,7 +89,7 @@ namespace JKD
 			}
 		}
 
-		public bool Collide(List<Line> lines, out Vector2d position, out int bestIndex, out Line bestLine, out double bestTime, Vector2d gravity)
+		public bool Collide(List<Line> lines, out Vector2d position, out int bestIndex, out Line bestLine, out double bestTime)
 		{
 			int index = 0;
 			bestIndex = 0;
@@ -100,16 +102,12 @@ namespace JKD
 				double c = line.Constant;
 
 				double t;
-				if( SolveThrow( a, b, c, out t) )
+				if( SolveThrow( a, b, c, out t, (double tc) => line.BoxCheck(PositionAt(tc))) )
 					if( t < bestTime )
 					{
-						Vector2d pos = PositionAt(t);
-						if(line.BoxCheck(pos))
-						{
-							bestTime = t;
-							bestLine = line;
-							bestIndex = index;
-						}
+						bestTime = t;
+						bestLine = line;
+						bestIndex = index;
 					}
 
 				index += 1;
@@ -117,7 +115,7 @@ namespace JKD
 			if(double.IsInfinity(bestTime))
 			{
 				double t;
-				SolveThrow( Ground.X, Ground.Y, Ground.Z, out t);
+				SolveThrow( Ground.X, Ground.Y, Ground.Z, out t, (double tc) => true);
 				position = PositionAt( t );
 				return false;
 			}

@@ -31,6 +31,11 @@ namespace JKD
 				msg += " ";
 				if( d is string )
 					msg += d;
+				if( d is Vector2d )
+				{
+					Vector2d dd = (Vector2d) d;
+					msg += "(" + dd.X + ", " + dd.Y + ")";
+				}
 				else
 					msg += d.ToString();
 			}

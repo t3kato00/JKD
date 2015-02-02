@@ -114,14 +114,32 @@ namespace JKD
 			int index;
 			Line line;
 			double time;
-			if(ball.Collide( lines, out pos, out index, out line, out time, new Vector2d( 0.0, -9.81 )))
+			if(ball.Collide( lines, out pos, out index, out line, out time))
 			{
 				flatColorLineProgram.LineColor = new Vector4(255.0f,0.0f,0.0f,1.0f);
 				flatColorLineProgram.DrawLine(line);
 			}
-			flatColorLineProgram.LineColor = new Vector4(0.0f,255.0f,0.0f,1.0f);
-			flatColorLineProgram.DrawLine(new Line(ball.StartVelocity,pos));
 
+			Vector2d k = new Vector2d(0.05).DivideBy(zoom);
+			flatColorLineProgram.LineColor = new Vector4(0.0f,255.0f,0.0f,1.0f);
+			flatColorLineProgram.DrawLines( new List<Line>
+				{ new Line(pos+k*new Vector2d(-1.0,-1.0), pos+k*new Vector2d(1.0,1.0))
+				, new Line(pos+k*new Vector2d(-1.0,1.0), pos+k*new Vector2d(1.0,-1.0))
+				} );
+
+			List<Line> path = new List<Line>();
+			double t = 0.0;
+			Vector2d pos0;
+			Vector2d pos1 = ball.PositionAt(t);
+			do
+			{
+				t += 0.01;
+				pos0 = pos1;
+				pos1 = ball.PositionAt(t);
+				path.Add(new Line(pos0, pos1));
+			} while( pos.Y >= -0.0001 && t <= 10.0 );
+			flatColorLineProgram.LineColor = new Vector4(255.0f,255.0f,0.0f,1.0f);
+			flatColorLineProgram.DrawLines(path);
 
 			SwapBuffers();
 		}
