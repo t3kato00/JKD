@@ -40,6 +40,7 @@
   <ItemGroup>
     <Compile Include="Cannonball.cs" />
     <Compile Include="FlatColorLineProgram.cs" />
+    <Compile Include="CursorProgram.cs" />
     <Compile Include="OpenGLFeatures.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -56,6 +57,8 @@
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <EmbeddedResource Include="Resources\FlatColorLine.frag" />
+    <EmbeddedResource Include="Resources\CursorGeom.frag" />
+    <EmbeddedResource Include="Resources\Cursor.frag" />
     <EmbeddedResource Include="Resources\Vertex.frag" />
   </ItemGroup>
 </Project>

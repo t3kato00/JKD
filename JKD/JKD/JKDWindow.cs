@@ -14,10 +14,21 @@ namespace JKD
 	{
 		double pixelRatio = 1.4;
 		double groundLength = 24.0;
+		double time;
 		FlatColorLineProgram flatColorLineProgram;
+		CursorProgram cursorProgram;
 		Vector2d zoom;
 		Vector2d viewPosition;
 		List<Line> lines;
+
+		private Vector2d AbsoluteZoom
+		{
+			get
+			{
+				return new Vector2d( pixelRatio/(double)Width, 1.0/(double)Height );
+			}
+		}
+
 
 		public JKDWindow()
 		: base
@@ -50,13 +61,14 @@ namespace JKD
 				VSync = VSyncMode.On;
 			};
 			Resize += (sender, e) => { Config (); };
-			UpdateFrame += (sender, e) => { Update(); };
+			UpdateFrame += (sender, e) => { Update(e.Time); };
 			RenderFrame += (sender, e) => { Render(); };
 			Closed += (sender, e) => { Exit(); };
 
 			//GL.Enable(EnableCap.LineSmooth);
 			//GL.LoadAll();
 			flatColorLineProgram = new FlatColorLineProgram();
+			cursorProgram = new CursorProgram();
 			OpenGLFeatures.Initialise();
 
 			zoom = new Vector2d(2.0/groundLength,0.0); // Y is initialized in config.
@@ -89,8 +101,10 @@ namespace JKD
 			JKD.CheckGLError();
 		}
 
-		public void Update()
+		public void Update(double t)
 		{
+			time += t;
+			JKD.Debug("Time update", time);
 			if (Keyboard[Key.Escape])
 				Exit();
 		}
@@ -113,19 +127,27 @@ namespace JKD
 			Vector2d pos;
 			int index;
 			Line line;
-			double time;
-			if(ball.Collide( lines, out pos, out index, out line, out time))
+			double tc;
+			if(ball.Collide( lines, out pos, out index, out line, out tc))
 			{
 				flatColorLineProgram.LineColor = new Vector4(255.0f,0.0f,0.0f,1.0f);
 				flatColorLineProgram.DrawLine(line);
 			}
 
-			Vector2d k = new Vector2d(0.05).DivideBy(zoom);
-			flatColorLineProgram.LineColor = new Vector4(0.0f,255.0f,0.0f,1.0f);
-			flatColorLineProgram.DrawLines( new List<Line>
-				{ new Line(pos+k*new Vector2d(-1.0,-1.0), pos+k*new Vector2d(1.0,1.0))
-				, new Line(pos+k*new Vector2d(-1.0,1.0), pos+k*new Vector2d(1.0,-1.0))
-				} );
+			//Vector2d k = new Vector2d(0.05).DivideBy(zoom);
+			//flatColorLineProgram.LineColor = new Vector4(0.0f,255.0f,0.0f,1.0f);
+			//flatColorLineProgram.DrawLines( new List<Line>
+			//	{ new Line(pos+k*new Vector2d(-1.0,-1.0), pos+k*new Vector2d(1.0,1.0))
+			//	, new Line(pos+k*new Vector2d(-1.0,1.0), pos+k*new Vector2d(1.0,-1.0))
+			//	} );
+			cursorProgram.Zoom = (Vector2) zoom;
+			cursorProgram.ViewPosition = (Vector2) viewPosition;
+			cursorProgram.AbsoluteZoom = (Vector2) AbsoluteZoom;
+			JKD.Debug("Time", time);
+			cursorProgram.Time = (float) time;
+			cursorProgram.CursorSize = 80.0f;
+			cursorProgram.CursorBorder = 20.0f;
+			cursorProgram.DrawCursor((Vector2) pos);
 
 			List<Line> path = new List<Line>();
 			double t = 0.0;
