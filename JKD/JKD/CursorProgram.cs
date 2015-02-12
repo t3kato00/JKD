@@ -20,7 +20,7 @@ namespace JKD
 			timeLocation = LoadUniformLocation("time");
 			absoluteZoomLocation = LoadUniformLocation("absoluteZoom");
 			cursorSizeLocation = LoadUniformLocation("cursorSize");
-			cursorBorderLocation = LoadUniformLocation("cursorBorder");
+			cursorBorderLocation = LoadUniformLocation("cursorBorder");	
 			VAO = new VertexArray();
 			VAO.Bind();
 

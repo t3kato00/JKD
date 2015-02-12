@@ -16,6 +16,7 @@ namespace JKD
 		double groundLength = 24.0;
 		double time;
 		FlatColorLineProgram flatColorLineProgram;
+		ArrowProgram arrowProgram;
 		CursorProgram cursorProgram;
 		Vector2d zoom;
 		Vector2d viewPosition;
@@ -69,6 +70,8 @@ namespace JKD
 			//GL.LoadAll();
 			flatColorLineProgram = new FlatColorLineProgram();
 			cursorProgram = new CursorProgram();
+			arrowProgram = new ArrowProgram();
+
 			OpenGLFeatures.Initialise();
 
 			zoom = new Vector2d(2.0/groundLength,0.0); // Y is initialized in config.
@@ -121,8 +124,9 @@ namespace JKD
 			flatColorLineProgram.DrawLines(lines);
 
 			Cannonball ball = new Cannonball( new Vector2d( 0.0, 0.0 ), MousePosition );
-			flatColorLineProgram.LineColor = new Vector4(0.0f,0.0f,255.0f,1.0f);
-			flatColorLineProgram.DrawLine(new Line(ball.StartPosition, ball.StartVelocity));
+			arrowProgram.ArrowColor = new Vector4(255.0f,0.0f,0.0f,1.0f);
+			arrowProgram.Constants = new Vector3(2.0f, 4.0f, 2.0f);
+			arrowProgram.DrawArrow(new Line(ball.StartPosition, ball.StartVelocity));
 			
 			Vector2d pos;
 			int index;
