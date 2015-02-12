@@ -23,6 +23,7 @@ void main()
 	vec2 c = gl_in[1].gl_Position.xy - gl_in[0].gl_Position.xy;
 	vec2 q = constants.x * absoluteZoom * normalize(vec2(c.y,-c.x));
 	float n = 1-length(absoluteZoom * c * constants.z);
+
 	gl_Position = vec4(gl_in[0].gl_Position.xy-q, 0, 1);
 	EmitVertex();
 	gl_Position = vec4(gl_in[0].gl_Position.xy+q, 0, 1);
@@ -34,9 +35,9 @@ void main()
 	EndPrimitive();
 
 	vec2 r = constants.y * absoluteZoom * normalize(vec2(c.y,-c.x));
-	gl_Position = vec4(-r + n * c, 0, 1);
+	gl_Position = vec4(gl_in[0].gl_Position.xy - r + n * c, 0, 1);
 	EmitVertex();
-	gl_Position = vec4(r + n * c, 0, 1);
+	gl_Position = vec4(gl_in[0].gl_Position.xy + r + n * c, 0, 1);
 	EmitVertex();
 	gl_Position = vec4(gl_in[1].gl_Position.xy, 0, 1);
 	EmitVertex();

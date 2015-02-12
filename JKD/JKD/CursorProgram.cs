@@ -20,7 +20,9 @@ namespace JKD
 			timeLocation = LoadUniformLocation("time");
 			absoluteZoomLocation = LoadUniformLocation("absoluteZoom");
 			cursorSizeLocation = LoadUniformLocation("cursorSize");
-			cursorBorderLocation = LoadUniformLocation("cursorBorder");	
+			cursorBorderLocation = LoadUniformLocation("cursorBorder");
+			cursorColorLocation = LoadUniformLocation("cursorColor");
+
 			VAO = new VertexArray();
 			VAO.Bind();
 
@@ -67,6 +69,11 @@ namespace JKD
 		int cursorBorderLocation;
 		public float CursorBorder {
 			set { Uniform(cursorBorderLocation, value); }
+		}
+
+		int cursorColorLocation;
+		public Vector4 CursorColor {
+			set { Uniform(cursorColorLocation, value); }
 		}
 
 		private VertexArray VAO;

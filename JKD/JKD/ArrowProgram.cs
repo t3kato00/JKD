@@ -16,6 +16,8 @@ namespace JKD
 										, ShaderManager.Require(ShaderType.FragmentShader, "JKD.Resources.FlatColorLine.frag") })
 		{
 			arrowColorLocation = LoadUniformLocation("lineColor");
+			zoomLocation = LoadUniformLocation("zoom");
+			viewPositionLocation = LoadUniformLocation("viewPosition");
 			absoluteZoomLocation = LoadUniformLocation("absoluteZoom");
 			constantsLocation = LoadUniformLocation("constants");
 
@@ -86,6 +88,16 @@ namespace JKD
 		int constantsLocation;
 		public Vector3 Constants {
 			set { Uniform(constantsLocation, value); }
+		}
+
+		int zoomLocation;
+		public Vector2 Zoom {
+			set { Uniform(zoomLocation, value); }
+		}
+
+		int viewPositionLocation;
+		public Vector2 ViewPosition {
+			set { Uniform(viewPositionLocation, value); }
 		}
 	}
 }

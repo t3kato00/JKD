@@ -86,6 +86,8 @@ namespace JKD
 			viewPosition.Y = (2.0/((double)Height)-1.0) / zoom.Y;
 			GL.Viewport (0, 0, Width, Height);
 			JKD.CheckGLError();
+			GL.Enable(IndexedEnableCap.Blend, 0);
+			GL.BlendEquationSeparate(BlendEquationMode.Max, BlendEquationMode.Max);
 
 			lines = new List<Line>{};
 			Vector2d[] points = new Vector2d[]
@@ -125,7 +127,10 @@ namespace JKD
 
 			Cannonball ball = new Cannonball( new Vector2d( 0.0, 0.0 ), MousePosition );
 			arrowProgram.ArrowColor = new Vector4(255.0f,0.0f,0.0f,1.0f);
-			arrowProgram.Constants = new Vector3(2.0f, 4.0f, 2.0f);
+			arrowProgram.Constants = new Vector3(5.0f, 15.0f, 10.0f);
+			arrowProgram.AbsoluteZoom = (Vector2)AbsoluteZoom;
+			arrowProgram.Zoom = (Vector2)zoom;
+			arrowProgram.ViewPosition = (Vector2)viewPosition;
 			arrowProgram.DrawArrow(new Line(ball.StartPosition, ball.StartVelocity));
 			
 			Vector2d pos;
@@ -149,8 +154,9 @@ namespace JKD
 			cursorProgram.AbsoluteZoom = (Vector2) AbsoluteZoom;
 			JKD.Debug("Time", time);
 			cursorProgram.Time = (float) time;
-			cursorProgram.CursorSize = 80.0f;
-			cursorProgram.CursorBorder = 20.0f;
+			cursorProgram.CursorSize = 20.0f;
+			cursorProgram.CursorBorder = 5.0f;
+			cursorProgram.CursorColor = new Vector4(0.41f, 0.53f, 0.159f, 1.0f);
 			cursorProgram.DrawCursor((Vector2) pos);
 
 			List<Line> path = new List<Line>();

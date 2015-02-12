@@ -27,16 +27,16 @@ out Fragment
 
 void main()
 {
-	float t2 = 1.0*time;
+	float t2 = time;
 	float k = cursorSize+cursorBorder;
-	//float n = k/cursorSize;
-	float n = 1.0;
+	float n = k/cursorSize;
+	//float n = 1.0;
 	vec2 off = k*vec2( sin(t2), cos(t2) );
 	vec2 offxy = absoluteZoom*off.xy;
 	vec2 offyx = absoluteZoom*off.yx;
 
 	gl_Position = vec4( gl_in[0].gl_Position.xy + offxy, 0.0, 1.0);
-	textureCoordinate = vec2(1.0,1.0);
+	textureCoordinate = vec2(n,n);
 	EmitVertex();
 	gl_Position = vec4( gl_in[0].gl_Position.xy + vec2(-1.0,1.0)*offyx, 0.0, 1.0);
 	textureCoordinate = vec2(-n,n);
