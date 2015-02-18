@@ -63,10 +63,14 @@ namespace JKD
 				points[2*index] = (Vector2) lines[index].A;
 				points[2*index+1] = (Vector2) lines[index].B;
 			}
-
+			DrawLines(points);
+			
+		}
+		public void DrawLines(Vector2[] points)
+		{
 			this.Bind();
 			drawLinesVAO.Bind();
-			using( ArrayBuffer<Vector2> buf = new ArrayBuffer<Vector2>(points) )
+			using (ArrayBuffer<Vector2> buf = new ArrayBuffer<Vector2>(points))
 			{
 				if (OpenGLFeatures.separateVertexFormat)
 				{
@@ -76,7 +80,7 @@ namespace JKD
 				}
 				else
 				{
-					GL.VertexAttribPointer(0, 2, VertexAttribPointerType.Float, false, 0, 0);	
+					GL.VertexAttribPointer(0, 2, VertexAttribPointerType.Float, false, 0, 0);
 				}
 
 				JKD.Debug("glDrawArrays Lines", 0, points.Length);

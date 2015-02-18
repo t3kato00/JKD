@@ -125,6 +125,26 @@ namespace JKD
 				return true;
 			}
 		}
+		public Vector2[] ArcPoints(double endTime, Vector2d pixelZoom)
+		{ 
+			double currentTime = 0;
+			List<Vector2d> points = new List<Vector2d>();
+			do
+			{
+				if (currentTime > endTime)
+					currentTime = endTime;
+				points.Add(PositionAt(currentTime));
+				Vector2d deltaTimeComponents = pixelZoom.DivideBy(Gravity * currentTime + StartVelocity);
+				double deltaTime = Math.Min(deltaTimeComponents.X, deltaTimeComponents.Y);
+				currentTime += deltaTime;
+			} while (currentTime < endTime);
+			Vector2[] pointsArray = new Vector2[points.Count];
+			for (int i = 0; i < points.Count; i += 1)
+			{
+				pointsArray[i] = (Vector2)points[i];
+			}
+			return pointsArray;
+		}
 	}
 }
 

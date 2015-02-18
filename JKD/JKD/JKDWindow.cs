@@ -34,7 +34,7 @@ namespace JKD
 		public JKDWindow()
 		: base
 			( 800, 600
-			, new GraphicsMode( new ColorFormat(8,8,8,0) )
+			, new GraphicsMode( new ColorFormat(8,8,8,0),0,0,4 )
 			, "Jäykän kappaleen dynamiikka"
 			, GameWindowFlags.Default
 			, DisplayDevice.Default
@@ -159,20 +159,8 @@ namespace JKD
 			cursorProgram.CursorColor = new Vector4(0.41f, 0.53f, 0.159f, 1.0f);
 			cursorProgram.DrawCursor((Vector2) pos);
 
-			List<Line> path = new List<Line>();
-			double t = 0.0;
-			Vector2d pos0;
-			Vector2d pos1 = ball.PositionAt(t);
-			do
-			{
-				t += 0.01;
-				pos0 = pos1;
-				pos1 = ball.PositionAt(t);
-				path.Add(new Line(pos0, pos1));
-			} while( pos.Y >= -0.0001 && t <= 10.0 );
-			flatColorLineProgram.LineColor = new Vector4(255.0f,255.0f,0.0f,1.0f);
-			flatColorLineProgram.DrawLines(path);
-
+			flatColorLineProgram.LineColor = new Vector4(1.0f, 1.0f, 0.0f, 1.0f);
+			flatColorLineProgram.DrawLines(ball.ArcPoints(tc, AbsoluteZoom));
 			SwapBuffers();
 		}
 
