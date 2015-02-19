@@ -86,7 +86,6 @@ namespace JKD
 			viewPosition.Y = (2.0/((double)Height)-1.0) / zoom.Y;
 			GL.Viewport (0, 0, Width, Height);
 			JKD.CheckGLError();
-			GL.Enable(IndexedEnableCap.Blend, 0);
 			GL.BlendEquationSeparate(BlendEquationMode.Max, BlendEquationMode.Max);
 
 			lines = new List<Line>{};
@@ -116,6 +115,7 @@ namespace JKD
 
 		public void Render()
 		{
+			GL.Enable(IndexedEnableCap.Blend, 0);
 			GL.ClearColor(0.0f, 0.0f, 0.0f, 255.0f);
 			GL.Clear(ClearBufferMask.ColorBufferBit);
 			JKD.CheckGLError();
@@ -137,12 +137,14 @@ namespace JKD
 			int index;
 			Line line;
 			double tc;
+			GL.Disable(IndexedEnableCap.Blend, 0);
 			if(ball.Collide( lines, out pos, out index, out line, out tc))
 			{
+				JKD.Debug("Collided");
 				flatColorLineProgram.LineColor = new Vector4(255.0f,0.0f,0.0f,1.0f);
 				flatColorLineProgram.DrawLine(line);
 			}
-
+			GL.Enable(IndexedEnableCap.Blend, 0);
 			//Vector2d k = new Vector2d(0.05).DivideBy(zoom);
 			//flatColorLineProgram.LineColor = new Vector4(0.0f,255.0f,0.0f,1.0f);
 			//flatColorLineProgram.DrawLines( new List<Line>

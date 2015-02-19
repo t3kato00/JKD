@@ -116,6 +116,7 @@ namespace JKD
 			{
 				double t;
 				SolveThrow( Ground.X, Ground.Y, Ground.Z, out t, (double tc) => true);
+				bestTime = t;
 				position = PositionAt( t );
 				return false;
 			}
@@ -130,13 +131,14 @@ namespace JKD
 		{ 
 			double currentTime = 0;
 			List<Vector2d> points = new List<Vector2d>();
+			if (double.IsInfinity(endTime))
+				return new Vector2[0];
 			do
 			{
 				if (currentTime > endTime)
 					currentTime = endTime;
 				points.Add(PositionAt(currentTime));
-				Vector2d deltaTimeComponents = pixelZoom.DivideBy(Gravity * currentTime + StartVelocity);
-				double deltaTime = Math.Min(Math.Min(Math.Abs(deltaTimeComponents.X), Math.Abs(deltaTimeComponents.Y)), 0.01);
+				double deltaTime = 0.02;
 				currentTime += deltaTime;
 			} while (currentTime < endTime);
 			Vector2[] pointsArray = new Vector2[points.Count];
