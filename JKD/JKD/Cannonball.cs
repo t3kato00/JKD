@@ -125,6 +125,7 @@ namespace JKD
 				return true;
 			}
 		}
+
 		public Vector2[] ArcPoints(double endTime, Vector2d pixelZoom)
 		{ 
 			double currentTime = 0;
@@ -135,7 +136,7 @@ namespace JKD
 					currentTime = endTime;
 				points.Add(PositionAt(currentTime));
 				Vector2d deltaTimeComponents = pixelZoom.DivideBy(Gravity * currentTime + StartVelocity);
-				double deltaTime = Math.Min(deltaTimeComponents.X, deltaTimeComponents.Y);
+				double deltaTime = Math.Min(Math.Min(Math.Abs(deltaTimeComponents.X), Math.Abs(deltaTimeComponents.Y)), 0.01);
 				currentTime += deltaTime;
 			} while (currentTime < endTime);
 			Vector2[] pointsArray = new Vector2[points.Count];
